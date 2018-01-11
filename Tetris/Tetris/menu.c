@@ -28,25 +28,23 @@ int PrintingMainMenu()
 	printf("made by Junk\n");
 
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), LIGHTGRAY);
-	while (bSelect) {
-		cSelect = getKey();
-		switch (cSelect)
-		{
-		case 's':
-			nSelect = START;
-			bSelect = FALSE;
-			break;
-		case 'r':
-			nSelect = RANK;
-			bSelect = FALSE;
-			break;
-		case 'e':
-			nSelect = EXIT;
-			bSelect = FALSE;
-			break;
-		default:
-			break;
-		}
+	cSelect = getch();
+	switch (cSelect)
+	{
+	case 's':
+		nSelect = START;
+		bSelect = FALSE;
+		break;
+	case 'r':
+		nSelect = RANK;
+		bSelect = FALSE;
+		break;
+	case 'e':
+		nSelect = EXIT;
+		bSelect = FALSE;
+		break;
+	default:
+		break;
 	}
 	return nSelect;
 }
