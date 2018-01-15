@@ -2,10 +2,10 @@
 
 int arBlocks[7][4][4] = {
 	{
-		{ EMPTY, EMPTY, EMPTY, EMPTY },
-		{ BLOCK, BLOCK, BLOCK, BLOCK },
-		{ EMPTY, EMPTY, EMPTY, EMPTY },
-		{ EMPTY, EMPTY, EMPTY, EMPTY }
+		{ EMPTY, BLOCK, EMPTY, EMPTY },
+		{ EMPTY, BLOCK, EMPTY, EMPTY },
+		{ EMPTY, BLOCK, EMPTY, EMPTY },
+		{ EMPTY, BLOCK, EMPTY, EMPTY }
 	},
 	{
 		{ EMPTY, EMPTY, EMPTY, EMPTY },
@@ -45,13 +45,20 @@ int arBlocks[7][4][4] = {
 	}
 };
 
-int arGameMap[MAPHEIGHT][MAPWIDTH];
-int arGamePreMap[PREMAPSIZE][PREMAPSIZE];
+int arGameMap[MAPHEIGHT][MAPWIDTH] = { 0 };
+int arGamePreMap[PREMAPSIZE][PREMAPSIZE] = { 0 };
+int arBlock[4][4] = { 0 };
 
-int arStartIdx[2] = { 1, 4 };
-int arBlockIdx[2] = { 0, 0 };
+int nPosX = 16;
+int nPosY = 3;
+int nIdxX = 5;
+int nIdxY = 1;
+
+//int arStartIdx[2] = { 1, 5 };
+//int arBlockIdx[2] = { 0, 0 };
 
 void initMap() {
+	//game map
 	for (int i = 0; i < MAPHEIGHT; i++) {
 		for (int j = 0; j < MAPWIDTH; j++) {
 			arGameMap[i][j] = EMPTY;
@@ -65,7 +72,7 @@ void initMap() {
 		arGameMap[0][i] = BLOCK;
 		arGameMap[MAPHEIGHT- 1][i] = BLOCK;
 	}
-
+	//pre game map
 	for (int i = 0; i < PREMAPSIZE; i++) {
 		for (int j = 0; j < PREMAPSIZE; j++) {
 			arGamePreMap[i][j] = EMPTY;
@@ -132,23 +139,23 @@ int getBlockIdx() {
 	return nBlockIdx;
 }
 
-int setPreBlock(int nBlockIdx) {
-	int nBlockY = 0;
-	int nBlockX = 0;
-	
-	for (int i = 1; i < PREMAPSIZE - 1; i++) {
-		nBlockX = 0;
-		for (int j = 1; j < PREMAPSIZE - 1; j++) {
-			arGamePreMap[i][j] = arBlocks[nBlockIdx][nBlockY][nBlockX];
-			nBlockX++;
+void initPreMap() {
+	for (int i = 0; i < PREMAPSIZE; i++) {
+		for (int j = 0; j < PREMAPSIZE; j++) {
+			arGamePreMap[i][j] = EMPTY;
 		}
-		nBlockY++;
 	}
-	return nBlockIdx;
+	for (int i = 0; i < PREMAPSIZE; i++) {
+		arGamePreMap[i][0] = BLOCK;
+		arGamePreMap[i][PREMAPSIZE - 1] = BLOCK;
+	}
+	for (int i = 1; i < PREMAPSIZE - 1; i++) {
+		arGamePreMap[0][i] = BLOCK;
+		arGamePreMap[PREMAPSIZE - 1][i] = BLOCK;
+	}
 }
 
 void showPreBlock(int nBlockIdx) {
-	gotoxy(42, 3);
 	for (int i = 0; i < BLOCKSIZE; i++) {
 		for (int j = 0; j < BLOCKSIZE; j++) {
 			gotoxy(42 + j * 2, 3 + i);
@@ -163,15 +170,17 @@ void showPreBlock(int nBlockIdx) {
 	}
 }
 
-void setInitBlock(int nBlockIdx) {
+/////////////////////////////////////////////////////////
+
+void showGameBlock(int nBlockIdx) {
+
+	memcpy(arBlock, arBlocks[nBlockIdx], sizeof(arBlock));
+
 	for (int i = 0; i < BLOCKSIZE; i++) {
 		for (int j = 0; j < BLOCKSIZE; j++) {
-			gotoxy(16 + j * 2, 3 + i);
-			if (arBlocks[nBlockIdx][i][j] == BLOCK) {
+			gotoxy(nPosX + j * 2, nPosY + i);
+			if (arBlock[i][j] == BLOCK) {
 				printf("%s", MAPBLOCK);
-			}
-			else {
-				printf("%s", MAPEMPTY);
 			}
 		}
 		printf("\n");
@@ -188,67 +197,151 @@ void showGameMap() {
 			else {
 				printf("%s", MAPEMPTY);
 			}
-
 		}
 		printf("\n");
 	}
 }
 
-void setGameBlock(int nBlockIdx) {
+//////////////////////////////////////////////////////////////////////
 
+BOOL checkCrush(int nKey)
+{
+	BOOL bCheck = FALSE;
+
+	switch (nKey)
+	{
+	case UP:
+
+		break;
+	case DOWN:
+		//
+		break;
+	case LEFT:
+		for (int i = 0; i < BLOCKSIZE; i++) {
+			for (int j = 0; j < BLOCKSIZE; j++) {
+				if (arBlock[i][j] == BLOCK && arGameMap[nIdxY + i][nIdxX + j - 1] == BLOCK) {
+					return bCheck;
+				}
+			}
+		}
+		break;
+	case RIGHT:
+		for (int i = 0; i < BLOCKSIZE; i++) {
+			for (int j = 0; j < BLOCKSIZE; j++) {
+				if (arBlock[i][j] == BLOCK && arGameMap[nIdxY + i][nIdxX + j + 1] == BLOCK) {
+					return bCheck;
+				}
+			}
+		}
+		break;
+	}
+
+	return TRUE;
 }
 
-void moveBlock(int nBlockIdx) {
+void checkMoveKey(int nBlockIdx) {
 	int nSelect = 0;
-	int nLeft = 0;
-	int nright = 0;
+	int nRotCount = 0;
+	int arTmpBlock[4][4] = { 0 };
 
-	
 	nSelect = _getch();
 	if (nSelect == 224) {
 		nSelect = _getch();
 		switch (nSelect)
 		{
 		case UP:
-			//
+			memcpy(arTmpBlock, arBlock, sizeof(arTmpBlock));
+			nRotCount++;
+			nRotCount = nRotCount % 4;
+			for (int i = 0; i < BLOCKSIZE; i++) {
+				for (int j = 0; j < BLOCKSIZE; j++) {
+					gotoxy(nPosX + j * 2, nPosY + i);
+					if (arBlock[i][j] == BLOCK) {
+						printf("%s", MAPEMPTY);
+					}
+				}
+				printf("\n");
+			}
+			rotationBlock(nRotCount);
+			for (int i = 0; i < BLOCKSIZE; i++) {
+				for (int j = 0; j < BLOCKSIZE; j++) {
+					gotoxy(nPosX + j * 2, nPosY + i);
+					if (arBlock[i][j] == BLOCK) {
+						printf("%s", MAPBLOCK);
+					}
+				}
+				printf("\n");
+			}
 			break;
 		case DOWN:
 			//
 			break;
 		case LEFT:
-			showGameMap();
-			arBlockIdx[1] -= 2;
-			for (int i = 0; i < BLOCKSIZE; i++) {
-				for (int j = 0; j < BLOCKSIZE; j++) {
-					gotoxy(16 + j * 2 + arBlockIdx[1], 3 + i);
-					if (arBlocks[nBlockIdx][i][j] == BLOCK) {
-						printf("%s", MAPBLOCK);
+			if (checkCrush(LEFT)) {
+				for (int i = 0; i < BLOCKSIZE; i++) {
+					for (int j = 0; j < BLOCKSIZE; j++) {
+						gotoxy(nPosX + j * 2, nPosY + i);
+						if (arBlock[i][j] == BLOCK) {
+							printf("%s", MAPEMPTY);
+						}
 					}
-					else {
-						printf("%s", MAPEMPTY);
-					}
+					printf("\n");
 				}
-				printf("\n");
+				nPosX -= 2;
+				nIdxX--;
+				for (int i = 0; i < BLOCKSIZE; i++) {
+					for (int j = 0; j < BLOCKSIZE; j++) {
+						gotoxy(nPosX + j * 2, nPosY + i);
+						if (arBlock[i][j] == BLOCK) {
+							printf("%s", MAPBLOCK);
+						}
+					}
+					printf("\n");
+				}
 			}
 			break;
 		case RIGHT:
-			showGameMap();
-			arBlockIdx[1] += 2;
-			for (int i = 0; i < BLOCKSIZE; i++) {
-				for (int j = 0; j < BLOCKSIZE; j++) {
-					gotoxy(16 + j * 2 + arBlockIdx[1], 3 + i);
-					if (arBlocks[nBlockIdx][i][j] == BLOCK) {
-						printf("%s", MAPBLOCK);
+			if (checkCrush(RIGHT)) {
+				for (int i = 0; i < BLOCKSIZE; i++) {
+					for (int j = 0; j < BLOCKSIZE; j++) {
+						gotoxy(nPosX + j * 2, nPosY + i);
+						if (arBlock[i][j] == BLOCK) {
+							printf("%s", MAPEMPTY);
+						}
 					}
-					else {
-						printf("%s", MAPEMPTY);
-					}
+					printf("\n");
 				}
-				printf("\n");
+				nPosX += 2;
+				nIdxX++;
+				for (int i = 0; i < BLOCKSIZE; i++) {
+					for (int j = 0; j < BLOCKSIZE; j++) {
+						gotoxy(nPosX + j * 2, nPosY + i);
+						if (arBlock[i][j] == BLOCK) {
+							printf("%s", MAPBLOCK);
+						}
+					}
+					printf("\n");
+				}
 			}
-			break;
-		default:
 			break;
 		}
 	}
+
+}
+
+void rotationBlock(int nRotCount) {
+	int arTmpBlock[4][4] = { 0 };
+	memcpy(arTmpBlock, arBlock, sizeof(arTmpBlock));
+	int nY = 0;
+
+	nY = 3;
+	for (int i = 0; i < BLOCKSIZE; i++) {
+		for (int j = 0; j < BLOCKSIZE; j++) {
+			arBlock[i][j] = arTmpBlock[j][nY - i];
+		}
+	}
+}
+
+void moveBlock(int nKey) {
+
 }

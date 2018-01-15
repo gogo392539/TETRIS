@@ -20,6 +20,7 @@
 #define MAPEMPTY "¡¤"
 #define BLOCK 111
 #define EMPTY 222
+
 #define BLOCKSIZE 4
 
 #define START 1

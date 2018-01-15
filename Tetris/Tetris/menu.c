@@ -28,7 +28,7 @@ int PrintingMainMenu()
 	printf("made by Junk\n");
 
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), LIGHTGRAY);
-	cSelect = getch();
+	cSelect = _getch();
 	switch (cSelect)
 	{
 	case 's':

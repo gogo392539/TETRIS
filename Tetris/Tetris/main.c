@@ -11,16 +11,14 @@ int main(void) {
 	if (nSelect = START) {
 		initMap();
 		printingMap();
-		for (int i = 0; i < 5; i++) {
-			nPreBlockIdx = getBlockIdx();
-			nGameBlockIdx = setPreBlock(nPreBlockIdx);
-			showPreBlock(nPreBlockIdx);
-			Sleep(1000);
-			setInitBlock(nGameBlockIdx);
-			while (1) {
-				moveBlock(nGameBlockIdx);
-			}
+
+		nPreBlockIdx = getBlockIdx();
+		showPreBlock(nPreBlockIdx);
+		showGameBlock(nPreBlockIdx);
+		while (1) {
+			checkMoveKey(nPreBlockIdx);
 		}
+	
 	}
 	return 0;
 }
