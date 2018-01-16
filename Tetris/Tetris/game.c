@@ -244,40 +244,16 @@ void checkMoveKey(int nBlockIdx) {
 	int nRotCount = 0;
 	int arTmpBlock[4][4] = { 0 };
 
-	nSelect = _getch();
-	if (nSelect == 224) {
+	if (_kbhit()) {
 		nSelect = _getch();
-		switch (nSelect)
-		{
-		case UP:
-			memcpy(arTmpBlock, arBlock, sizeof(arTmpBlock));
-			nRotCount++;
-			nRotCount = nRotCount % 4;
-			for (int i = 0; i < BLOCKSIZE; i++) {
-				for (int j = 0; j < BLOCKSIZE; j++) {
-					gotoxy(nPosX + j * 2, nPosY + i);
-					if (arBlock[i][j] == BLOCK) {
-						printf("%s", MAPEMPTY);
-					}
-				}
-				printf("\n");
-			}
-			rotationBlock(nRotCount);
-			for (int i = 0; i < BLOCKSIZE; i++) {
-				for (int j = 0; j < BLOCKSIZE; j++) {
-					gotoxy(nPosX + j * 2, nPosY + i);
-					if (arBlock[i][j] == BLOCK) {
-						printf("%s", MAPBLOCK);
-					}
-				}
-				printf("\n");
-			}
-			break;
-		case DOWN:
-			//
-			break;
-		case LEFT:
-			if (checkCrush(LEFT)) {
+		if (nSelect == 224) {
+			nSelect = _getch();
+			switch (nSelect)
+			{
+			case UP:
+				memcpy(arTmpBlock, arBlock, sizeof(arTmpBlock));
+				nRotCount++;
+				nRotCount = nRotCount % 4;
 				for (int i = 0; i < BLOCKSIZE; i++) {
 					for (int j = 0; j < BLOCKSIZE; j++) {
 						gotoxy(nPosX + j * 2, nPosY + i);
@@ -287,8 +263,7 @@ void checkMoveKey(int nBlockIdx) {
 					}
 					printf("\n");
 				}
-				nPosX -= 2;
-				nIdxX--;
+				rotationBlock(nRotCount);
 				for (int i = 0; i < BLOCKSIZE; i++) {
 					for (int j = 0; j < BLOCKSIZE; j++) {
 						gotoxy(nPosX + j * 2, nPosY + i);
@@ -298,41 +273,68 @@ void checkMoveKey(int nBlockIdx) {
 					}
 					printf("\n");
 				}
-			}
-			break;
-		case RIGHT:
-			if (checkCrush(RIGHT)) {
-				for (int i = 0; i < BLOCKSIZE; i++) {
-					for (int j = 0; j < BLOCKSIZE; j++) {
-						gotoxy(nPosX + j * 2, nPosY + i);
-						if (arBlock[i][j] == BLOCK) {
-							printf("%s", MAPEMPTY);
+				break;
+			case DOWN:
+				//
+				break;
+			case LEFT:
+				if (checkCrush(LEFT)) {
+					for (int i = 0; i < BLOCKSIZE; i++) {
+						for (int j = 0; j < BLOCKSIZE; j++) {
+							gotoxy(nPosX + j * 2, nPosY + i);
+							if (arBlock[i][j] == BLOCK) {
+								printf("%s", MAPEMPTY);
+							}
 						}
+						printf("\n");
 					}
-					printf("\n");
-				}
-				nPosX += 2;
-				nIdxX++;
-				for (int i = 0; i < BLOCKSIZE; i++) {
-					for (int j = 0; j < BLOCKSIZE; j++) {
-						gotoxy(nPosX + j * 2, nPosY + i);
-						if (arBlock[i][j] == BLOCK) {
-							printf("%s", MAPBLOCK);
+					nPosX -= 2;
+					nIdxX--;
+					for (int i = 0; i < BLOCKSIZE; i++) {
+						for (int j = 0; j < BLOCKSIZE; j++) {
+							gotoxy(nPosX + j * 2, nPosY + i);
+							if (arBlock[i][j] == BLOCK) {
+								printf("%s", MAPBLOCK);
+							}
 						}
+						printf("\n");
 					}
-					printf("\n");
 				}
+				break;
+			case RIGHT:
+				if (checkCrush(RIGHT)) {
+					for (int i = 0; i < BLOCKSIZE; i++) {
+						for (int j = 0; j < BLOCKSIZE; j++) {
+							gotoxy(nPosX + j * 2, nPosY + i);
+							if (arBlock[i][j] == BLOCK) {
+								printf("%s", MAPEMPTY);
+							}
+						}
+						printf("\n");
+					}
+					nPosX += 2;
+					nIdxX++;
+					for (int i = 0; i < BLOCKSIZE; i++) {
+						for (int j = 0; j < BLOCKSIZE; j++) {
+							gotoxy(nPosX + j * 2, nPosY + i);
+							if (arBlock[i][j] == BLOCK) {
+								printf("%s", MAPBLOCK);
+							}
+						}
+						printf("\n");
+					}
+				}
+				break;
 			}
-			break;
 		}
 	}
-
 }
 
 void rotationBlock(int nRotCount) {
 	int arTmpBlock[4][4] = { 0 };
 	memcpy(arTmpBlock, arBlock, sizeof(arTmpBlock));
 	int nY = 0;
+	int nCount = 0;
 
 	nY = 3;
 	for (int i = 0; i < BLOCKSIZE; i++) {
@@ -340,8 +342,72 @@ void rotationBlock(int nRotCount) {
 			arBlock[i][j] = arTmpBlock[j][nY - i];
 		}
 	}
+
+	for(int j = 0; j < 2; j++) {
+		for (int i = 0; i < BLOCKSIZE; i++) {
+			if (arGameMap[nIdxY + i][nIdxX] == BLOCK && arBlock[i][0] == BLOCK) {
+				nPosX += 2;
+				nIdxX++;
+			}
+		}
+	}
+	
+	for (int j = 0; j < 2; j++) {
+		for (int i = 0; i < BLOCKSIZE; i++) {
+			if (arGameMap[nIdxY + i][nIdxX + 3] == BLOCK && arBlock[i][3] == BLOCK) {
+				nPosX -= 2;
+				nIdxX--;
+			}
+		}
+	}
 }
 
-void moveBlock(int nKey) {
+void downBlock() {
+	Sleep(300);
+	int nMapX = 0;
+	int nMapY = 0;
+	BOOL bCheckk = FALSE;
 
+	for (int i = BLOCKSIZE - 1; i >= 0 ; i--) {
+		for (int j = 0; j < BLOCKSIZE; j++) {
+			if (arBlock[i][j] == BLOCK && arGameMap[nIdxY + i + 1][nIdxX + j] == BLOCK) {
+				bCheckk = TRUE;
+				break;
+			}
+		}
+		if (bCheckk)
+			break;
+	}
+
+	if (bCheckk) {
+		for (int i = 0; i < BLOCKSIZE; i++) {
+			for (int j = 0; j < BLOCKSIZE; j++) {
+				if (arBlock[i][j] == BLOCK) {
+					arGameMap[nIdxY + i][nIdxX + j] = BLOCK;
+				}
+			}
+		}
+	}
+	else {
+		for (int i = 0; i < BLOCKSIZE; i++) {
+			for (int j = 0; j < BLOCKSIZE; j++) {
+				gotoxy(nPosX + j * 2, nPosY + i);
+				if (arBlock[i][j] == BLOCK) {
+					printf("%s", MAPEMPTY);
+				}
+			}
+			printf("\n");
+		}
+		nPosY += 1;
+		nIdxY++;
+		for (int i = 0; i < BLOCKSIZE; i++) {
+			for (int j = 0; j < BLOCKSIZE; j++) {
+				gotoxy(nPosX + j * 2, nPosY + i);
+				if (arBlock[i][j] == BLOCK) {
+					printf("%s", MAPBLOCK);
+				}
+			}
+			printf("\n");
+		}
+	}
 }

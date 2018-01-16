@@ -13,10 +13,16 @@ int main(void) {
 		printingMap();
 
 		nPreBlockIdx = getBlockIdx();
+		//nPreBlockIdx = 0;
 		showPreBlock(nPreBlockIdx);
 		showGameBlock(nPreBlockIdx);
 		while (1) {
-			checkMoveKey(nPreBlockIdx);
+			for (int i = 0; i < 5; i++) {
+				Sleep(100);
+				checkMoveKey(nPreBlockIdx);
+			}
+			downBlock();
+			
 		}
 	
 	}
