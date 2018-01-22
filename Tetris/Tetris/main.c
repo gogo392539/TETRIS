@@ -6,25 +6,31 @@ int main(void) {
 	int nSelect = 0;
 	int nPreBlockIdx = 0;
 	int nGameBlockIdx = 0;
+	int nBlockIdx = 0;
 
 	nSelect = PrintingMainMenu();
 	if (nSelect = START) {
-		initMap();
-		printingMap();
-
-		nPreBlockIdx = getBlockIdx();
-		//nPreBlockIdx = 0;
-		showPreBlock(nPreBlockIdx);
-		showGameBlock(nPreBlockIdx);
+		initGameScene();
+		showGameScene();
+		//randomBlock();
+		showPostBlock();
+		Sleep(1000);
 		while (1) {
-			for (int i = 0; i < 5; i++) {
-				Sleep(100);
-				checkMoveKey(nPreBlockIdx);
+			randomBlock();
+			initBlockPosition();
+			showGameBlock();
+			while (1) {
+				for (int i = 0; i < 5; i++) {
+					inputArrowKey();
+					Sleep(100);
+				}
+				if (!downBlock()) {
+					fixBlock();
+					break;
+				}
 			}
-			downBlock();
-			
+
 		}
-	
 	}
 	return 0;
 }

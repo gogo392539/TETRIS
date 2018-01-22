@@ -18,10 +18,10 @@
     <ClCompile Include="main.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="game.c">
+    <ClCompile Include="menu.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="menu.c">
+    <ClCompile Include="game.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,10 +29,10 @@
     <ClInclude Include="main.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="game.h">
+    <ClInclude Include="menu.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="menu.h">
+    <ClInclude Include="game.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

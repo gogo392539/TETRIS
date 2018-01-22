@@ -2,28 +2,38 @@
 
 #include "main.h"
 
-extern int arBlocks[7][4][4];
-extern int arGameMap[MAPHEIGHT][MAPWIDTH];
-extern int arGamePreMap[PREMAPSIZE][PREMAPSIZE];
+extern const int arBlocks[7][4][4][4];
 extern int arBlock[4][4];
-extern int nPosX;		//block position
+extern int arGameMap[MAPHEIGHT][MAPWIDTH];
+extern int arPostBlockMap[PREMAPSIZE][PREMAPSIZE];
+
+extern int nBlockType;
+extern int nBlockRot;
+
+extern int nPosX;
 extern int nPosY;
-extern int nIdxX;		//block index
+extern int nIdxX;
 extern int nIdxY;
-//extern int arStartIdx[2];
-//extern int arBlockIdx[2];
 
-void initMap();
-void printingMap();
+void initGameScene();
+void initBlockPosition();
 
-int getBlockIdx();
-void initPreMap();
-void showPreBlock(int nBlockIdx);
-
-void showGameBlock(int nBlockIdx);
+void showGameScene();
+//void showPostMap();
 void showGameMap();
+void showPostBlock();
+void showGameBlock();
+void eraseGameBlock();
 
-BOOL checkCrush(int nKey);
-void checkMoveKey(int nBlockIdx);
-void rotationBlock(int nRotCount);
-void downBlock();
+void randomBlock();
+void setBlockIdx();
+BOOL downBlock();
+void settingBlock();
+BOOL blockCrushCheck(int nX, int nY, int nRot);
+void fixBlock();
+
+void inputArrowKey();
+void leftArrow();
+void rightArrow();
+void upArrow();
+void downArrow();

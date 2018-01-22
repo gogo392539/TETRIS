@@ -7,15 +7,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-
-#define LIGHTGRAY 7 
-#define LIGHTBLUE 9 
-#define LIGHTGREEN 10 
-#define LIGHTCYAN 11 
-#define LIGHTRED 12 
-#define LIGHTMAGENTA 13 
-#define YELLOW 14 
-
 #define MAPBLOCK "¡á"
 #define MAPEMPTY "¡¤"
 #define BLOCK 111
@@ -35,6 +26,5 @@
 #define DOWN 80
 #define LEFT 75
 #define RIGHT 77
-#define ROTATION 100
 
 void gotoxy(int x, int y);
