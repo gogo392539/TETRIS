@@ -4,34 +4,69 @@
 
 int main(void) {
 	int nSelect = 0;
-	int nPreBlockIdx = 0;
-	int nGameBlockIdx = 0;
-	int nBlockIdx = 0;
+	int nScore = 0;
+	BOOL bGameCheck = FALSE;
 
 	nSelect = PrintingMainMenu();
-	if (nSelect = START) {
-		initGameScene();
-		showGameScene();
-		//randomBlock();
-		showPostBlock();
-		Sleep(1000);
-		while (1) {
-			randomBlock();
-			initBlockPosition();
-			showGameBlock();
-			while (1) {
-				for (int i = 0; i < 5; i++) {
-					inputArrowKey();
-					Sleep(100);
-				}
-				if (!downBlock()) {
-					fixBlock();
+	while (1) {
+
+		if (nSelect == START) {
+			nScore = 0;
+			bGameCheck = TRUE;
+			initGameScene();
+			showGameScene();
+			setRandomBlock();
+			showPostBlock();
+			Sleep(1000);
+			while (bGameCheck) {
+				initBlockPosition();
+				setGameBlock();
+				if (!showGameBlock()) {
 					break;
 				}
-			}
+				setRandomBlock();
+				showPostBlock();
+				while (1) {
+					for (int i = 0; i < 5; i++) {
+						if (!inputEventKey()) {
+							bGameCheck = FALSE;
+							break;
+						}
+						Sleep(100);
+					}
 
+					if (!bGameCheck)
+						break;
+
+					if (!downBlock()) {
+						fixBlock();
+						if (!dieGame()) {
+							bGameCheck = FALSE;
+						}
+						break;
+					}
+				} //end while
+			} //end while
+			nScore = getGameScore();
+			setGameScore(nScore);
+			nSelect = PrintingMainMenu();
 		}
+		else if (nSelect == RANK) {
+			showRanking();
+
+
+
+			nSelect = PrintingMainMenu();
+		}
+		else if (nSelect == EXIT) {
+			if (finishGame()) {
+				break;
+			}
+			nSelect = PrintingMainMenu();
+		}
+
 	}
+	
 	return 0;
 }
 

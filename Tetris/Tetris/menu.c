@@ -1,5 +1,8 @@
 #include "menu.h"
 
+//char* arGameScore[10] = { 0 };
+int arGameScore[10] = { 0 };
+
 int PrintingMainMenu()
 {
 	system("cls");
@@ -55,4 +58,72 @@ int PrintingMainMenu()
 	}
 	
 	return nSelect;
+}
+
+void setGameScore(int nInput) {
+	int nScoreIdx = 0;
+	int nTmpScore = 0;
+	int nScore = 0;
+
+	nScore = nInput;
+	for (int i = 0; i < 10; i++) {
+		if (nScore > arGameScore[i]) {
+			nScoreIdx = i;
+		}
+	}
+
+	for (int i = nScoreIdx; i < 10; i++) {
+		nTmpScore = arGameScore[i];
+		arGameScore[i] = nScore;
+		nScore = nTmpScore;
+	}
+
+}
+
+void showRanking() {
+	system("cls");
+
+	system("mode con cols=40 lines=20");
+
+	int nRank = 0;
+	char cSelect = '\0';
+
+	printf("\n");
+	printf("  Ranking Top10! \n");
+	printf("\n");
+
+	nRank = 1;
+	for (int i = 0; i < 10; i++) {
+		if (arGameScore[i] == 0) {
+			printf(" %d.		BLANK \n", nRank);
+		}
+		else {
+			printf(" %d.		%d \n", nRank, arGameScore[i]);
+		}
+		nRank++;
+	}
+
+
+	gotoxy(2, 15);
+	printf("Back 	 : 'b' \n ");
+	
+	while (1) {
+		cSelect = _getch();
+		if (cSelect == 'b' || cSelect == 'B') {
+			break;
+		}
+	}
+}
+
+BOOL finishGame()
+{
+	char cSelect = 0;
+	gotoxy(20, 15);
+	printf("게임을 종료하시겠습니까?(y/n)\n");
+
+	cSelect = _getch();
+	if (cSelect == 'N' || cSelect == 'n')
+		return FALSE;
+
+	return TRUE;
 }
