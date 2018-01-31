@@ -2,15 +2,16 @@
 
 #include "main.h"
 
-//extern char* arGameScore[10];
-extern int arGameScore[10];
+extern S_Ranking sRanking[10];
 
 int PrintingMainMenu();
 
-void setGameScore(int nInput);
+void sortGameRanking(char* sUserName, int nInput, int nRankingIdx);
 void showRanking();
+void gameOver(int nScore);
+void saveRanking(int nScore);
 
-void rankingFileInput();
-void rankingFileOutput();
+void readFileRanking();
+void writeFileranking();
 
 BOOL finishGame();

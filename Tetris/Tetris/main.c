@@ -7,6 +7,7 @@ int main(void) {
 	int nScore = 0;
 	BOOL bGameCheck = FALSE;
 
+	readFileRanking();
 	nSelect = PrintingMainMenu();
 	while (1) {
 
@@ -29,6 +30,7 @@ int main(void) {
 				while (1) {
 					for (int i = 0; i < 5; i++) {
 						if (!inputEventKey()) {
+							gameOver(-1);
 							bGameCheck = FALSE;
 							break;
 						}
@@ -41,14 +43,15 @@ int main(void) {
 					if (!downBlock()) {
 						fixBlock();
 						if (!dieGame()) {
+							nScore = getGameScore();
+							gameOver(nScore);
 							bGameCheck = FALSE;
 						}
 						break;
 					}
 				} //end while
 			} //end while
-			nScore = getGameScore();
-			setGameScore(nScore);
+			writeFileranking();
 			nSelect = PrintingMainMenu();
 		}
 		else if (nSelect == RANK) {

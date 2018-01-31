@@ -27,4 +27,9 @@
 #define LEFT 75
 #define RIGHT 77
 
+typedef struct S_Ranking {
+	char sUserName[256];
+	int nScore;
+} S_Ranking;
+
 void gotoxy(int x, int y);

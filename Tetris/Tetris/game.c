@@ -204,6 +204,7 @@ int nIdxY = 0;
 
 void initGameScene() {
 	//game map
+	nScore = 0;
 	for (int i = 0; i < MAPHEIGHT; i++) {
 		for (int j = 0; j < MAPWIDTH; j++) {
 			arGameMap[i][j] = EMPTY;
@@ -529,9 +530,17 @@ BOOL inputEventKey() {
 				break;
 			}
 		}
+		else if (nSelect == 32) {
+			eraseGameBlock();
+			while (CheckblockCrush(0, 1, nBlockRot)) {
+				downArrow();
+			}
+			showGameBlock();
+		}
 		else if (nSelect == 116) {
 			if (!exitGame()) {
 				return FALSE;
+
 			}
 		}
 	}
