@@ -7,4 +7,4 @@ asdasf 60
 asdasdfaga 50
 aaaa 40
 bbbb 30
-cccc 20
+cccc 15
