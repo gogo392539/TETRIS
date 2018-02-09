@@ -167,11 +167,12 @@ void saveRanking(int nScore)
 void readFileRanking()
 {
 	FILE* fp = NULL;
+	errno_t err;
 	int nIndex = 0;
 	char strBlank[] = "BLANK";
 
-	fopen_s(&fp, "./ranking/ranking.txt", "rt");
-	if (fp == NULL) {
+	err = fopen_s(&fp, "./ranking/ranking.txt", "rt");
+	if (err != 0) {
 		printf("file read error! \n");
 	}
 
@@ -192,10 +193,11 @@ void readFileRanking()
 void writeFileranking()
 {
 	FILE* fp = NULL;
+	errno_t err;
 	int nIndex = 0;
 
-	fopen_s(&fp, "./ranking/ranking.txt", "wt");
-	if (fp == NULL) {
+	err = fopen_s(&fp, "./ranking/ranking.txt", "wt");
+	if (err != 0) {
 		printf("file write error! \n");
 	}
 
